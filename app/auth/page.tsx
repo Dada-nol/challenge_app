@@ -1,31 +1,48 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
 
 export default function AuthPage() {
+  const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [message, setMessage] = useState("");
+  const supabase = createClient();
 
   const handleSubmit = async () => {
-    const url = isLogin ? "/api/auth/login" : "/api/auth/register";
-    const body = isLogin ? { email, password } : { email, password, username };
-
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      setMessage(isLogin ? "Connecté ✅" : "Compte créé ✅");
-      console.log(data);
+    if (isLogin) {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) {
+        setMessage(`Erreur : ${error.message}`);
+      } else {
+        router.push("/");
+        router.refresh();
+      }
     } else {
-      setMessage(`Erreur : ${data.error}`);
+      const { data, error } = await supabase.auth.signUp({ email, password });
+      if (error) {
+        setMessage(`Erreur : ${error.message}`);
+        return;
+      }
+      // Créer le profil
+      if (data.user) {
+        const { error: profileError } = await supabase
+          .from("profiles")
+          .insert({ id: data.user.id, username, xp: 0, level: 1 });
+        if (profileError) {
+          setMessage(`Erreur : ${profileError.message}`);
+          return;
+        }
+      }
+      router.push("/");
+      router.refresh();
     }
   };
 
