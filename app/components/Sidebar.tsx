@@ -33,7 +33,7 @@ export default function Sidebar({ activePage, setActivePage }: Props) {
             <span className="text-bg font-display font-black text-sm">C</span>
           </div>
           <span className="font-display font-bold text-xl text-text tracking-tight">
-            Challengr
+            FC Panda
           </span>
         </div>
       </div>
