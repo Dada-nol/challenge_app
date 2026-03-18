@@ -65,8 +65,9 @@ export async function GET(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
+  const { id } = await params;
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
@@ -80,7 +81,7 @@ export async function DELETE(
   const { data: membership } = await supabase
     .from("group_members")
     .select("role")
-    .eq("group_id", params.id)
+    .eq("group_id", id)
     .eq("user_id", user.id)
     .single();
 
@@ -88,7 +89,7 @@ export async function DELETE(
     return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
   }
 
-  const { error } = await supabase.from("groups").delete().eq("id", params.id);
+  const { error } = await supabase.from("groups").delete().eq("id", id);
 
   if (error)
     return NextResponse.json({ error: error.message }, { status: 400 });
