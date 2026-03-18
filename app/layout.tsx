@@ -3,13 +3,16 @@ import { AuthProvider } from "./context/AuthContext";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Challengr",
+  title: "Fc Panda",
   description: "Défie tes amis. Gagne de l'XP. Monte de rang.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Challengr",
+    title: "FC Panda",
+  },
+  icons: {
+    icon: "/favicon.jpg",
   },
 };
 
@@ -37,6 +40,18 @@ export default function RootLayout({
         <link
           href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
           rel="stylesheet"
+        />
+
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js')
+      })
+    }
+  `,
+          }}
         />
       </head>
       <body>
