@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
 import { createClient } from "@/utils/supabase/client";
 import type { User } from "@supabase/supabase-js";
 
@@ -12,7 +18,6 @@ interface AuthContextType {
     avatar_url: string | null;
     xp: number;
     level: number;
-    email?: string;
   } | null;
   loading: boolean;
   signOut: () => Promise<void>;
@@ -31,16 +36,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
-  useEffect(() => {
-    // Récupérer la session au chargement
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      if (session?.user) fetchProfile(session.user.id);
-      else setLoading(false);
-    });
-
-    // Écouter les changements de session
-    const fetchProfile = async (userId: string) => {
+  const fetchProfile = useCallback(
+    async (userId: string) => {
       const { data } = await supabase
         .from("profiles")
         .select("id, username, avatar_url, xp, level")
@@ -48,26 +45,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .single();
       setProfile(data);
       setLoading(false);
-    };
+    },
+    [supabase],
+  );
 
+  useEffect(() => {
+    // Écouter les changements de session en premier
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
-      if (session?.user) fetchProfile(session.user.id);
-      else {
+      if (session?.user) {
+        fetchProfile(session.user.id);
+      } else {
         setProfile(null);
         setLoading(false);
       }
     });
 
+    // Récupérer la session existante
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      if (session?.user) fetchProfile(session.user.id);
+      else setLoading(false);
+    });
+
     return () => subscription.unsubscribe();
-  }, [supabase]);
+  }, [supabase, fetchProfile]);
 
   const signOut = async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
+    await supabase.auth.signOut();
     setUser(null);
     setProfile(null);
+    window.location.href = "/auth";
   };
 
   return (
