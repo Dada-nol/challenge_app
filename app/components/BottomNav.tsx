@@ -3,11 +3,11 @@
 import { Page } from "../page";
 
 const navItems = [
-  { id: "dashboard", label: "Home", icon: "⚡" },
-  { id: "challenges", label: "Défis", icon: "🎯" },
+  { id: "dashboard", label: "Home", icon: "🏠" },
+  { id: "challenges", label: "Défis", icon: "⚡" },
   { id: "friends", label: "Groupes", icon: "👥" },
   { id: "leaderboard", label: "Top", icon: "🏆" },
-  { id: "messages", label: "Chat", icon: "💬" },
+  // { id: "messages", label: "Chat", icon: "💬" },
 ] as const;
 
 interface Props {

@@ -9,15 +9,11 @@ import Dashboard from "./components/Dashboard";
 import Challenges from "./components/Challenges";
 import Groups from "./components/Groups";
 import Leaderboard from "./components/Leaderboard";
-import Messages from "./components/Messages";
+// import Messages from "./components/Messages";
 import BottomNav from "./components/BottomNav";
 
-export type Page =
-  | "dashboard"
-  | "challenges"
-  | "friends"
-  | "leaderboard"
-  | "messages";
+export type Page = "dashboard" | "challenges" | "friends" | "leaderboard";
+// | "messages";
 
 export default function Home() {
   const { user, loading } = useAuth();
@@ -48,8 +44,8 @@ export default function Home() {
         return <Groups />;
       case "leaderboard":
         return <Leaderboard />;
-      case "messages":
-        return <Messages />;
+      // case "messages":
+      //   return <Messages />;
     }
   };
 
