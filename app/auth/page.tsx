@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -10,6 +11,7 @@ export default function AuthPage() {
   const [username, setUsername] = useState("");
   const [message, setMessage] = useState("");
   const supabase = createClient();
+  const router = useRouter();
 
   const handleSubmit = async () => {
     setMessage("");
@@ -34,7 +36,8 @@ export default function AuthPage() {
             data.session ? "OUI" : "NON",
           );
           console.log("🔄 Redirection vers /...");
-          window.location.href = "/";
+          router.push("/");
+          router.refresh();
         }
       } else {
         const { data, error } = await supabase.auth.signUp({ email, password });
@@ -66,7 +69,8 @@ export default function AuthPage() {
         }
 
         console.log("🔄 Redirection finale vers /...");
-        window.location.href = "/";
+        router.push("/");
+        router.refresh();
       }
     } catch (err) {
       console.error("💥 Erreur inattendue dans handleSubmit:", err);
