@@ -35,7 +35,7 @@ export default function ProfilePage() {
       setMessage("Username mis à jour ✅");
       setEditing(false);
       // Recharger la page pour mettre à jour le context
-      window.location.reload();
+      router.refresh();
     } else {
       setMessage(`Erreur : ${data.error}`);
     }
