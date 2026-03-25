@@ -1,15 +1,16 @@
 "use client";
 
+import Image from "next/image";
 import { useAuth } from "../context/AuthContext";
 import { Page } from "../page";
 import { useRouter } from "next/navigation";
 
 const navItems = [
-  { id: "dashboard", label: "Dashboard", icon: "⚡" },
-  { id: "challenges", label: "Défis", icon: "🎯" },
+  { id: "dashboard", label: "Home", icon: "🏠" },
+  { id: "challenges", label: "Défis", icon: "⚡" },
   { id: "friends", label: "Groupes", icon: "👥" },
   { id: "leaderboard", label: "Classement", icon: "🏆" },
-  { id: "messages", label: "Messages", icon: "💬" },
+  // { id: "messages", label: "Messages", icon: "💬" },
 ] as const;
 
 interface Props {
@@ -29,8 +30,8 @@ export default function Sidebar({ activePage, setActivePage }: Props) {
       {/* Logo */}
       <div className="p-6 border-b border-border">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center glow-accent">
-            <span className="text-bg font-display font-black text-sm">C</span>
+          <div className="w-12 h-12 rounded-lg flex items-center justify-center">
+            <Image width={100} height={100} src="/favicon.png" alt="" />
           </div>
           <span className="font-display font-bold text-xl text-text tracking-tight">
             FC Panda

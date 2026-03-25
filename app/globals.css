@@ -5,17 +5,21 @@
   --font-body: "DM Sans", sans-serif;
   --font-mono: "DM Mono", monospace;
 
-  --color-bg: #0a0a0f;
-  --color-surface: #12121a;
-  --color-border: #1e1e2e;
-  --color-accent: #c8ff00;
-  --color-accent-dim: #8fad00;
-  --color-purple: #7c3aed;
-  --color-purple-soft: #a78bfa;
-  --color-gold: #ffb800;
-  --color-muted: #4a4a6a;
-  --color-text: #e8e8f0;
-  --color-text-dim: #8888a8;
+  --color-bg: #0d0d12; /* Un noir très profond avec une pointe de bleu/gris */
+  --color-surface: #16161d; /* Un gris sombre pour détacher les cartes du fond */
+  --color-border: #26262f; /* Bordures subtiles pour structurer l'interface */
+
+  --color-accent: #c4a456;
+  --color-accent-dim: #8a6f3a;
+
+  --color-purple: #3e6b27;
+  --color-purple-soft: #63a345;
+
+  --color-gold: #d4af37;
+
+  --color-muted: #3f3f4e;
+  --color-text: #f4f4f7;
+  --color-text-dim: #9494a5;
 
   --animate-slide-up: slideUp 0.5s ease forwards;
   --animate-fade-in: fadeIn 0.4s ease forwards;
