@@ -12,33 +12,65 @@ export default function AuthPage() {
   const supabase = createClient();
 
   const handleSubmit = async () => {
-    if (isLogin) {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (error) {
-        setMessage(`Erreur : ${error.message}`);
+    setMessage("");
+    console.log(
+      "🚀 Tentative de " + (isLogin ? "connexion" : "inscription") + " pour:",
+      email,
+    );
+
+    try {
+      if (isLogin) {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (error) {
+          console.error("❌ Erreur SignIn:", error.message);
+          setMessage(`Erreur : ${error.message}`);
+        } else {
+          console.log(
+            "✅ Connexion réussie, session récupérée:",
+            data.session ? "OUI" : "NON",
+          );
+          console.log("🔄 Redirection vers /...");
+          window.location.href = "/";
+        }
       } else {
-        window.location.href = "/";
-      }
-    } else {
-      const { data, error } = await supabase.auth.signUp({ email, password });
-      if (error) {
-        setMessage(`Erreur : ${error.message}`);
-        return;
-      }
-      // Créer le profil
-      if (data.user) {
-        const { error: profileError } = await supabase
-          .from("profiles")
-          .insert({ id: data.user.id, username, xp: 0, level: 1 });
-        if (profileError) {
-          setMessage(`Erreur : ${profileError.message}`);
+        const { data, error } = await supabase.auth.signUp({ email, password });
+
+        if (error) {
+          console.error("❌ Erreur SignUp:", error.message);
+          setMessage(`Erreur : ${error.message}`);
           return;
         }
+
+        console.log("✅ Inscription réussie, User ID:", data.user?.id);
+        console.log(
+          "📦 Session après SignUp:",
+          data.session ? "Présente" : "Absente (Mail confirmation requis ?)",
+        );
+
+        if (data.user) {
+          console.log("📝 Tentative de création du profil...");
+          const { error: profileError } = await supabase
+            .from("profiles")
+            .insert({ id: data.user.id, username, xp: 0, level: 1 });
+
+          if (profileError) {
+            console.error("❌ Erreur Profil:", profileError.message);
+            setMessage(`Erreur Profil : ${profileError.message}`);
+            return;
+          }
+          console.log("✅ Profil créé avec succès");
+        }
+
+        console.log("🔄 Redirection finale vers /...");
+        window.location.href = "/";
       }
-      window.location.href = "/";
+    } catch (err) {
+      console.error("💥 Erreur inattendue dans handleSubmit:", err);
+      setMessage("Une erreur critique est survenue.");
     }
   };
 
